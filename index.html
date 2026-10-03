@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ज्ञान खेल - Hindi Quiz</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7ff;
+            color: #222;
+        }
+
+        /* Navbar */
+        nav {
+            background: linear-gradient(135deg, #6c5ce7, #0984e3);
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #ffeaa7;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 21px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            border: none;
+            padding: 14px 30px;
+            border-radius: 30px;
+            background: #fdcb6e;
+            color: #2d3436;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.08);
+            background: #ffeaa7;
+        }
+
+        /* Sections */
+        section {
+            padding: 60px 7%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 35px;
+            margin-bottom: 40px;
+            color: #2d3436;
+        }
+
+        /* Categories */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card .icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #636e72;
+        }
+
+        /* Quiz Box */
+        #quizSection {
+            display: none;
+            background: #ffffff;
+        }
+
+        .quiz-box {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .timer {
+            color: #e17055;
+        }
+
+        .progress {
+            height: 10px;
+            background: #dfe6e9;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #00b894;
+            transition: 0.4s;
+        }
+
+        #question {
+            font-size: 25px;
+            margin-bottom: 25px;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 16px;
+            border: 2px solid #dfe6e9;
+            border-radius: 12px;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .option:hover {
+            border-color: #6c5ce7;
+            background: #f1efff;
+        }
+
+        .option.correct {
+            background: #55efc4;
+            border-color: #00b894;
+        }
+
+        .option.wrong {
+            background: #ff7675;
+            border-color: #d63031;
+            color: white;
+        }
+
+        #nextBtn {
+            margin-top: 25px;
+            display: none;
+        }
+
+        /* Result */
+        #resultSection {
+            display: none;
+            text-align: center;
+        }
+
+        .result-box {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 45px;
+            border-radius: 25px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+        }
+
+        .score {
+            font-size: 55px;
+            color: #6c5ce7;
+            font-weight: bold;
+            margin: 20px;
+        }
+
+        /* About */
+        .about {
+            max-width: 900px;
+            margin: auto;
+            text-align: center;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        /* Footer */
+        footer {
+            background: #2d3436;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            .categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .categories {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .quiz-box {
+                padding: 20px;
+            }
+
+            #question {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">🧠 ज्ञान खेल</div>
+
+        <div>
+            <a href="#home">होम</a>
+            <a href="#categories">Quiz</a>
+            <a href="#about">हमारे बारे में</a>
+        </div>
+    </nav>
+
+
+    <!-- Home -->
+    <section class="hero" id="home">
+
+        <div>
+            <h1>🎯 खेलो, सीखो और ज्ञान बढ़ाओ!</h1>
+
+            <p>
+                मजेदार हिंदी Quiz खेलिए और अपना ज्ञान बढ़ाइए।
+            </p>
+
+            <button class="btn" onclick="scrollToQuiz()">
+                🚀 Quiz शुरू करें
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- Categories -->
+    <section id="categories">
+
+        <h2 class="section-title">
+            📚 Quiz Categories
+        </h2>
+
+        <div class="categories">
+
+            <div class="card" onclick="startQuiz('gk')">
+                <div class="icon">🧠</div>
+                <h3>सामान्य ज्ञान</h3>
+                <p>भारत और दुनिया से जुड़े प्रश्न</p>
+            </div>
+
+            <div class="card" onclick="startQuiz('science')">
+                <div class="icon">🔬</div>
+                <h3>विज्ञान</h3>
+                <p>Science के मजेदार सवाल</p>
+            </div>
+
+            <div class="card" onclick="startQuiz('math')">
+                <div class="icon">➗</div>
+                <h3>गणित</h3>
+                <p>Math की मजेदार Practice</p>
+            </div>
+
+            <div class="card" onclick="startQuiz('hindi')">
+                <div class="icon">📖</div>
+                <h3>हिंदी</h3>
+                <p>हिंदी व्याकरण और शब्द ज्ञान</p>
+            </div>
+
+            <div class="card" onclick="startQuiz('computer')">
+                <div class="icon">💻</div>
+                <h3>कंप्यूटर</h3>
+                <p>Computer और Technology</p>
+            </div>
+
+            <div class="card" onclick="startQuiz('environment')">
+                <div class="icon">🌱</div>
+                <h3>पर्यावरण</h3>
+                <p>Nature और Environment</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Quiz -->
+    <section id="quizSection">
+
+        <h2 class="section-title">
+            🎮 आपका Quiz
+        </h2>
+
+        <div class="quiz-box">
+
+            <div class="quiz-header">
+
+                <span id="questionNumber">
+                    प्रश्न 1 / 5
+                </span>
+
+                <span class="timer">
+                    ⏱️ <span id="timer">30</span>
+                </span>
+
+            </div>
+
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <h3 id="question">
+                प्रश्न यहाँ दिखाई देगा
+            </h3>
+
+            <div class="options" id="options"></div>
+
+            <button
+                class="btn"
+                id="nextBtn"
+                onclick="nextQuestion()">
+                अगला प्रश्न →
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- Result -->
+    <section id="resultSection">
+
+        <div class="result-box">
+
+            <h2>🎉 Quiz पूरा हुआ!</h2>
+
+            <p>आपका Score</p>
+
+            <div class="score" id="score">
+                0 / 5
+            </div>
+
+            <h3 id="resultMessage">
+                बहुत बढ़िया!
+            </h3>
+
+            <br>
+
+            <button class="btn" onclick="restartQuiz()">
+                🔄 फिर से खेलें
+            </button>
+
+            <button class="btn" onclick="goHome()">
+                🏠 होम
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- About -->
+    <section id="about">
+
+        <h2 class="section-title">
+            🌟 हमारे बारे में
+        </h2>
+
+        <div class="about">
+
+            <p>
+                <b>ज्ञान खेल</b> एक educational quiz website है
+                जहाँ बच्चे खेल-खेल में नई चीजें सीख सकते हैं।
+            </p>
+
+            <p>
+                यहाँ सामान्य ज्ञान, विज्ञान, गणित, हिंदी,
+                कंप्यूटर और पर्यावरण जैसे अलग-अलग विषयों के
+                मजेदार प्रश्न उपलब्ध हैं।
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            © 2026 ज्ञान खेल | बच्चों के लिए मजेदार Learning Website
+        </p>
+
+    </footer>
+
+
+<script>
+
+    /* Quiz Questions */
+
+    const quizData = {
+
+        gk: [
+            {
+                question: "भारत की राजधानी क्या है?",
+                options: ["मुंबई", "नई दिल्ली", "भोपाल", "जयपुर"],
+                answer: 1
+            },
+            {
+                question: "भारत का राष्ट्रीय पशु कौन है?",
+                options: ["शेर", "हाथी", "बाघ", "घोड़ा"],
+                answer: 2
+            },
+            {
+                question: "भारत का राष्ट्रीय पक्षी कौन है?",
+                options: ["तोता", "मोर", "कबूतर", "हंस"],
+                answer: 1
+            },
+            {
+                question: "भारत में कितने राज्य हैं?",
+                options: ["26", "27", "28", "29"],
+                answer: 2
+            },
+            {
+                question: "तिरंगे में कितने मुख्य रंग हैं?",
+                options: ["2", "3", "4", "5"],
+                answer: 1
+            }
+        ],
+
+        science: [
+            {
+                question: "पौधे अपना भोजन किस प्रक्रिया से बनाते हैं?",
+                options: ["पाचन", "प्रकाश संश्लेषण", "श्वसन", "वाष्पीकरण"],
+                answer: 1
+            },
+            {
+                question: "हमारे शरीर में रक्त को पंप कौन करता है?",
+                options: ["फेफड़े", "हृदय", "मस्तिष्क", "पेट"],
+                answer: 1
+            },
+            {
+                question: "पानी का रासायनिक सूत्र क्या है?",
+                options: ["CO2", "O2", "H2O", "NaCl"],
+                answer: 2
+            },
+            {
+                question: "सूर्य एक क्या है?",
+                options: ["ग्रह", "तारा", "उपग्रह", "धूमकेतु"],
+                answer: 1
+            },
+            {
+                question: "मनुष्य सांस लेने के लिए किस गैस का उपयोग करता है?",
+                options: ["ऑक्सीजन", "कार्बन डाइऑक्साइड", "हीलियम", "हाइड्रोजन"],
+                answer: 0
+            }
+        ],
+
+        math: [
+            {
+                question: "10 + 20 कितना होगा?",
+                options: ["20", "25", "30", "40"],
+                answer: 2
+            },
+            {
+                question: "8 × 5 कितना होगा?",
+                options: ["30", "35", "40", "45"],
+                answer: 2
+            },
+            {
+                question: "100 ÷ 10 कितना होगा?",
+                options: ["5", "10", "15", "20"],
+                answer: 1
+            },
+            {
+                question: "50 - 25 कितना होगा?",
+                options: ["15", "20", "25", "30"],
+                answer: 2
+            },
+            {
+                question: "7 × 7 कितना होगा?",
+                options: ["42", "49", "56", "63"],
+                answer: 1
+            }
+        ],
+
+        hindi: [
+            {
+                question: "‘राम’ कौन सा शब्द है?",
+                options: ["संज्ञा", "क्रिया", "विशेषण", "सर्वनाम"],
+                answer: 0
+            },
+            {
+                question: "‘सुंदर’ कौन सा शब्द है?",
+                options: ["संज्ञा", "विशेषण", "क्रिया", "सर्वनाम"],
+                answer: 1
+            },
+            {
+                question: "‘मैं’ कौन सा शब्द है?",
+                options: ["संज्ञा", "क्रिया", "सर्वनाम", "विशेषण"],
+                answer: 2
+            },
+            {
+                question: "‘दिन’ का विलोम शब्द क्या है?",
+                options: ["सुबह", "रात", "शाम", "दोपहर"],
+                answer: 1
+            },
+            {
+                question: "‘जल’ का पर्यायवाची शब्द कौन सा है?",
+                options: ["आग", "पानी", "हवा", "धरती"],
+                answer: 1
+            }
+        ],
+
+        computer: [
+            {
+                question: "Computer का दिमाग किसे कहा जाता है?",
+                options: ["Monitor", "CPU", "Mouse", "Keyboard"],
+                answer: 1
+            },
+            {
+                question: "Keyboard का उपयोग किसके लिए होता है?",
+                options: ["Typing", "Printing", "Scanning", "Drawing"],
+                answer: 0
+            },
+            {
+                question: "HTML का उपयोग किसके लिए किया जाता है?",
+                options: ["Website बनाने के लिए", "Game खेलने के लिए", "Video देखने के लिए", "Music सुनने के लिए"],
+                answer: 0
+            },
+            {
+                question: "WWW का पूरा नाम क्या है?",
+                options: [
+                    "World Wide Web",
+                    "World Web Window",
+                    "Web World Wide",
+                    "Wide World Web"
+                ],
+                answer: 0
+            },
+            {
+                question: "Mouse का उपयोग मुख्य रूप से किसके लिए किया जाता है?",
+                options: ["Click और Select", "Print", "Sound", "Power"],
+                answer: 0
+            }
+        ],
+
+        environment: [
+            {
+                question: "पेड़ हमें कौन सी गैस देते हैं?",
+                options: ["ऑक्सीजन", "कार्बन डाइऑक्साइड", "हाइड्रोजन", "हीलियम"],
+                answer: 0
+            },
+            {
+                question: "हमें पानी बचाना चाहिए?",
+                options: ["हाँ", "नहीं", "कभी नहीं", "पता नहीं"],
+                answer: 0
+            },
+            {
+                question: "कचरे को अलग-अलग करना किसके लिए अच्छा है?",
+                options: ["पर्यावरण", "प्रदूषण", "धुआँ", "शोर"],
+                answer: 0
+            },
+            {
+                question: "पेड़ लगाने से क्या लाभ होता है?",
+                options: [
+                    "पर्यावरण बेहतर होता है",
+                    "प्रदूषण बढ़ता है",
+                    "पानी खत्म होता है",
+                    "गर्मी बढ़ती है"
+                ],
+                answer: 0
+            },
+            {
+                question: "प्लास्टिक का अधिक उपयोग किस समस्या को बढ़ा सकता है?",
+                options: [
+                    "प्रदूषण",
+                    "स्वच्छता",
+                    "हरियाली",
+                    "ऑक्सीजन"
+                ],
+                answer: 0
+            }
+        ]
+
+    };
+
+
+    let currentQuiz = [];
+    let currentQuestion = 0;
+    let score = 0;
+    let timer;
+    let timeLeft = 30;
+
+
+    /* Start Quiz */
+
+    function startQuiz(category) {
+
+        currentQuiz = quizData[category];
+
+        currentQuestion = 0;
+        score = 0;
+
+        document.getElementById("quizSection").style.display = "block";
+        document.getElementById("resultSection").style.display = "none";
+
+        document.getElementById("quizSection").scrollIntoView({
+            behavior: "smooth"
+        });
+
+        showQuestion();
+    }
+
+
+    /* Show Question */
+
+    function showQuestion() {
+
+        clearInterval(timer);
+
+        timeLeft = 30;
+
+        document.getElementById("timer").innerText = timeLeft;
+
+        timer = setInterval(() => {
+
+            timeLeft--;
+
+            document.getElementById("timer").innerText = timeLeft;
+
+            if (timeLeft <= 0) {
+
+                clearInterval(timer);
+
+                disableOptions();
+
+                document.getElementById("nextBtn").style.display = "inline-block";
+
+            }
+
+        }, 1000);
+
+
+        const q = currentQuiz[currentQuestion];
+
+        document.getElementById("questionNumber").innerText =
+            `प्रश्न ${currentQuestion + 1} / ${currentQuiz.length}`;
+
+        document.getElementById("question").innerText =
+            q.question;
+
+        document.getElementById("progressBar").style.width =
+            ((currentQuestion + 1) / currentQuiz.length * 100) + "%";
+
+
+        const optionsContainer =
+            document.getElementById("options");
+
+        optionsContainer.innerHTML = "";
+
+        q.options.forEach((option, index) => {
+
+            const button = document.createElement("div");
+
+            button.className = "option";
+
+            button.innerText = option;
+
+            button.onclick = () => checkAnswer(button, index);
+
+            optionsContainer.appendChild(button);
+
+        });
+
+        document.getElementById("nextBtn").style.display = "none";
+    }
+
+
+    /* Check Answer */
+
+    function checkAnswer(button, selectedIndex) {
+
+        clearInterval(timer);
+
+        const correctAnswer =
+            currentQuiz[currentQuestion].answer;
+
+        const allOptions =
+            document.querySelectorAll(".option");
+
+        allOptions.forEach(option => {
+            option.style.pointerEvents = "none";
+        });
+
+
+        if (selectedIndex === correctAnswer) {
+
+            button.classList.add("correct");
+
+            score++;
+
+        } else {
+
+            button.classList.add("wrong");
+
+            allOptions[correctAnswer]
+                .classList.add("correct");
+
+        }
+
+        document.getElementById("nextBtn")
+            .style.display = "inline-block";
+    }
+
+
+    /* Disable Options */
+
+    function disableOptions() {
+
+        const allOptions =
+            document.querySelectorAll(".option");
+
+        allOptions.forEach(option => {
+
+            option.style.pointerEvents = "none";
+
+        });
+    }
+
+
+    /* Next Question */
+
+    function nextQuestion() {
+
+        currentQuestion++;
+
+        if (currentQuestion < currentQuiz.length) {
+
+            showQuestion();
+
+        } else {
+
+            showResult();
+
+        }
+    }
+
+
+    /* Result */
+
+    function showResult() {
+
+        clearInterval(timer);
+
+        document.getElementById("quizSection").style.display = "none";
+
+        document.getElementById("resultSection").style.display = "block";
+
+        document.getElementById("score").innerText =
+            `${score} / ${currentQuiz.length}`;
+
+
+        let message = "";
+
+        if (score === currentQuiz.length) {
+
+            message = "🏆 शानदार! आपने सभी प्रश्न सही किए!";
+
+        } else if (score >= 3) {
+
+            message = "🌟 बहुत बढ़िया! आपकी तैयारी अच्छी है।";
+
+        } else {
+
+            message = "💪 अच्छी कोशिश! फिर से Practice करें।";
+
+        }
+
+        document.getElementById("resultMessage")
+            .innerText = message;
+
+        document.getElementById("resultSection")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+    }
+
+
+    /* Restart */
+
+    function restartQuiz() {
+
+        currentQuestion = 0;
+        score = 0;
+
+        document.getElementById("resultSection").style.display = "none";
+
+        document.getElementById("quizSection").style.display = "block";
+
+        showQuestion();
+
+        document.getElementById("quizSection")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+    }
+
+
+    /* Home */
+
+    function goHome() {
+
+        document.getElementById("resultSection").style.display = "none";
+
+        document.getElementById("categories")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+    }
+
+
+    /* Scroll Quiz */
+
+    function scrollToQuiz() {
+
+        document.getElementById("categories")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+    }
+
+</script>
+
+</body>
+</html>
